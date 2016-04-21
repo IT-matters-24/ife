@@ -1,14 +1,17 @@
+define(function(require,exports,module){
+  require('../js/base.js');
+  require('../js/queue.js');
 
 /*
 深度优先遍历
 */
 function traverseDF(node,list) {
   (function recurse(currentNode){
-  	for(var i = 0,length = currentNode.children.length;i < length;i+=1) {
-  	  recurse(currentNode.children[i]);
-  	}
+    for(var i = 0,length = currentNode.children.length;i < length;i+=1) {
+      recurse(currentNode.children[i]);
+    }
 
-  	list.push(currentNode);
+    list.push(currentNode);
   })(node);
 }
 /*
@@ -19,11 +22,11 @@ function traverseBF(node,list) {
   queue.enqueue(node);
   currentTree = queue.dequeue();
   while(currentTree) {
-  	for(var i = 0,length = currentTree.children.length;i < length;i+=1) {
-  		queue.enqueue(currentTree.children[i]);
-  	}
-  	list.push(currentTree);
-  	currentTree = queue.dequeue();
+    for(var i = 0,length = currentTree.children.length;i < length;i+=1) {
+      queue.enqueue(currentTree.children[i]);
+    }
+    list.push(currentTree);
+    currentTree = queue.dequeue();
   }
 }
 var draw = false;
@@ -34,40 +37,42 @@ function render(list,text,speed) {
       timer = null;
   
   timer = setInterval(function(){
-  	draw = true;
-  	if(i < length) {
-  		var temp = i;
-  		if(i > 0) {
-  			list[temp-1].style.background = "white";
-  		}
-  		list[i].style.background = "red";
-  		if(list[i].firstChild.textContent.indexOf(text) != -1  && text != "") {
-  		  clearInterval(timer);
-  		  list[i].style.background = "green";
-  		  find = true;
-  		  draw = false;
-  		}
-  		i++;
-  	} else {
-  		clearInterval(timer);
-  		list[length-1].style.background = "white";
-  		draw = false;
-  		if(find == false && text != "") {
-  		  alert("没有找到");
-  		}
+    draw = true;
+    if(i < length) {
+      var temp = i;
+      if(i > 0) {
+        list[temp-1].style.background = "white";
+      }
+      list[i].style.background = "red";
+      if(list[i].firstChild.textContent.indexOf(text) != -1  && text != "") {
+        clearInterval(timer);
+        list[i].style.background = "green";
+        find = true;
+        draw = false;
+      }
+      i++;
+    } else {
+      clearInterval(timer);
+      list[length-1].style.background = "white";
+      draw = false;
+      if(find == false && text != "") {
+        alert("没有找到");
+      }
 
-  	}
+    }
   },speed);
   
 }
 
 function reset() {
   var list = [],
-  	  root = base.$("root");
+      root = base.$("root");
   traverseBF(root,list);
     for(var i = 0,len = list.length;i < len;i++) {
-      list[i].style.background = "white";
-  	}
+      if(list[i].nodeName !== "SPAN") {
+        list[i].style.background = "white";
+      }
+    }
 }
 
 function add(nums) {
@@ -75,7 +80,8 @@ function add(nums) {
   for(var i = 0,len = nums.length;i < len;i+=1) {
     var div = document.createElement("div");
     div.setAttribute("class","son");
-    div.textContent = nums[i];
+    div.innerHTML = "<span>" + nums[i] + "</span>";
+    div.style.backgroundColor = "white";
     fragment.appendChild(div);
   }
 
@@ -85,91 +91,30 @@ function add(nums) {
 var deleteNode = null;
 function bindEvent() {
   var root = base.$("root"),
-      DF_btn = base.$("DF"),
-      BF_btn = base.$("BF"),
-      DF_search = base.$("DF_search"),
-      BF_search = base.$("BF_search"),
-      delete_btn = base.$("delete"),
-      add_btn = base.$("add"),
-      add_text = base.$("add_text");
-  /*代码需要优化 多余的必须  这部分有很多重复性的代码 优化 */
-  base.addEventListener(DF_btn,"click",function(event){
-  	var list = [];
-  	var speed = base.trim(base.$("input_num").value);
-  	if(!base.test_num(speed)) {
-      alert("请输入正确的数字");
-      return false;
-  	}
-  	if(!draw) {
-  	  traverseDF(root,list);
-      render(list,"",speed);	
+      delete_btn = base.$("delete_btn"),
+      add_btn = base.$("add_btn");
+  
+ 
 
-  	} else {
-  	  alert("动画中");
-  	  return false;
-  	}
-    
-  });
-  base.addEventListener(BF_btn,"click",function(){
-  	var list = [];
-  	var speed = base.trim(base.$("input_num").value);
-  	if(!base.test_num(speed)) {
-      alert("请输入正确的数字");
-      return false;
-  	}
-    if(!draw) {
-  	  traverseBF(root,list);
-      render(list,"",speed);	
-  	} else {
-  	  alert("动画中");
-      return false;
-  	}
-  });
-  base.addEventListener(DF_search,"click",function(){
-  	reset();
-  	var list = [];
-  	var speed = base.trim(base.$("input_num").value);
-  	var input_search = base.trim(base.$("input_text").value);
-  	if(!base.test_num(speed)) {
-  	  alert("请输入正确的数字");
-      return false;  
-  	}
-  	if(!draw) {
-  	  traverseDF(root,list);
-      render(list,input_search,speed);	
-  	} else {
-  		alert("正在动画");
-  		return false;
-  	}
-  });
 
-  base.addEventListener(BF_search,"click",function(){
-  	reset();
-    var list = [];
-  	var speed = base.trim(base.$("input_num").value);
-  	var input_search = base.trim(base.$("input_text").value);
-  	if(!base.test_num(speed)) {
-  	  alert("请输入正确的数字");
-      return false;  
-  	}
-  	if(!draw) {
-  	  traverseBF(root,list);
-      render(list,input_search,speed);	
-  	} else {
-      alert("正在动画");
-      return false;
-  	}	
-  });
   /*
   *委托  单击选中
   */
   base.addEventListener(root,"click",function(event){
     reset();
     var evt = event || window.event;
-    event.target.style.backgroundColor = "blue";
+    if(evt.target.nodeName == "SPAN") {
+      var parent = evt.target.parentNode;
+      parent.style.backgroundColor = "blue";
+      var children = parent.children;
+      for(var i = 1,len = children.length;i < len;i+=1) {
+        children[i].style.display = "none";
+      }
+    } else {
+      evt.target.style.backgroundColor = "blue";
+    }
+
     deleteNode = event.target;
-
-
   });
   /*
   *委托 双击取消
@@ -177,13 +122,23 @@ function bindEvent() {
   base.addEventListener(root,"dblclick",function(event){
     /*此处没有必要使用reset 操作太多*/
     var evt = event || window.event;
-    event.target.style.backgroundColor = "white";
+    if(evt.target.nodeName == "SPAN") {
+      var parent = evt.target.parentNode;
+      parent.style.backgroundColor = "white";
+      var children = parent.children;
+      for(var i = 1,len = children.length;i < len;i+=1) {
+        children[i].style.display = "block";
+      }
+
+    } else {
+      event.target.style.backgroundColor = "white";
+    }
     deleteNode = null;
     
   });
 
   base.addEventListener(delete_btn,"click",function(){
-    /*parentNode parentElement 的区别*/
+    
     if(deleteNode === null) {
       alert("您没有选中节点");
       return false;
@@ -203,6 +158,7 @@ function bindEvent() {
       alert("您没有输入内容");
       return false;
     }
+    /*全角半角的逗号分隔*/
     var nums = get_text.split(/[,，]+/);
     var fragment = add(nums);
     deleteNode.appendChild(fragment);
@@ -227,3 +183,7 @@ tree.add("4","1",tree.traverseDF);
 tree.traverseDF(function(node){
   console.log(node.data);
 });*/
+
+
+
+});
