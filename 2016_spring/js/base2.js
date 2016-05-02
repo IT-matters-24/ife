@@ -1,7 +1,11 @@
 define(function(require, exports, module) {
   var base = {};
 
-  //在页面加载完成后 绑定事件队列
+  /*
+  *function 在页面加载完成后 绑定事件队列
+  *@param func 事件
+  *return null
+  */
   base.addLoadEvent = function(func) {
     var oldonload = window.onload;
     if(typeof window.onload != 'function') {
@@ -14,7 +18,13 @@ define(function(require, exports, module) {
     }
   }
 
-  //跨浏览器的绑定事件函数
+  /*
+  *function 跨浏览器绑定函数
+  *@param eventTarget 绑定事件的目标
+  *@param eventType 事件类型
+  *@param handler 事件处理函数
+  *return null
+  */
   base.addEventListener = function(eventTarget,eventType,handler) {
     if(eventTarget.addEventListener) {
       eventTarget.addEventListener(eventType,handler,false);
@@ -26,8 +36,14 @@ define(function(require, exports, module) {
     }
   }
 
-  //跨浏览器的移除事件函数
-  base.removeListenEvent = function(eventTarget,eventType,handler){
+  /*
+  *function 跨浏览器移除事件函数
+  *@param eventTarget 移除事件目标
+  *@param eventType 移除事件类型
+  *@param handler 移除事件的句柄
+  *return  null
+  */
+  base.removeEventListener = function(eventTarget,eventType,handler){
     if(eventTarget.removeEventListener) {
       eventTarget.removeListenerEvent(eventType,handler,false);
     } else if(eventTarget.detachEvent) {
@@ -38,7 +54,12 @@ define(function(require, exports, module) {
     }
   }
   
-  //className 选择器 返回htmlcollection
+  /*
+  *function 选择相应父元素下的className元素
+  *@param 父元素
+  *@className className
+  *@return 相应父元素下的className的htmlcollection集合
+  */
   base.getClass = function(father,className) {
     var children = father.getElementsByTagName("*"),
         length = children.length,
@@ -60,19 +81,32 @@ define(function(require, exports, module) {
   }
 
 
-  //id选择器
+  /*
+  *function id选择器
+  *@param string id
+  *return 相应的id元素
+  *
+  */
   base.$ = function(id) {
     return document.getElementById(id);
   }
 
-  //去输入字符串的头尾的空格
+  /*
+  *function 去除输入头尾的空格
+  *@param string str 输入
+  *return 去除头尾的空格的结果
+  */
   base.trim = function(str) {
     return str.replace(/^\s+|\s+$/g,''); 
   }
 
-  //判断输入是否由数字组成
+  /*
+  *function 判断输入是否由数字组成
+  *@param string num 输入
+  *return boolean 是否由数字组成
+  */
   base.test_num = function(num) {
-    if(!num) {
+    if(num === undefined) {
     return false;
     }
     if(num.match(/^[0-9]+$/)) {
@@ -81,13 +115,7 @@ define(function(require, exports, module) {
       return false;
     }
   }
-  //这里导师给出了意见 命名方式的问题   判断输入是否为空 之后的都用下面的函数
-  base.test_input_null = function(text) {
-    if(!text) {
-      return false;
-    }
-    return true;
-  }
+  
 
   base.test_input = function(text) {
     if(!text) {
@@ -108,7 +136,12 @@ define(function(require, exports, module) {
   }
 
 
-  //为一个元素节点增加class
+  /*
+  *function 为相应的节点添加class
+  *@param element 元素节点
+  *@param classValue className
+  *return htmlCollection 返回相应父元素下的className的htmlCollection
+  */
   base.addClass = function(element,classValue) {
     var oldClass = element.getAttribute("class");
     var newClass = null;
@@ -127,7 +160,11 @@ define(function(require, exports, module) {
     }
   }
 
-  //为一个元素节点移除class
+  /*
+  *function 移除相应节点下的class
+  *@param element 元素节点
+  *@param classValue 要移除的classValue
+  */
   base.removeClass = function(element,classValue) {
     var oldClass = element.getAttribute("class");
     var newClass = null;
@@ -143,18 +180,32 @@ define(function(require, exports, module) {
     
     }
   }
-  //移除所有的class
+  
+  /*
+  *function 移除相应元素的所有class
+  *@param element 元素节点
+  */
   base.removeAllClass = function(element) {
     element.removeAttribute("class");
   }
   
+  /*
+  *function 获取一定范围的随机数
+  *@param num 随机数的范围
+  *return 返回相应范围的随机数
+  */
   base.randomNum = function(num) {
     var ret = Math.floor(Math.random()*num);
     return ret
   }
   
 
-  //判断数字是否在一个数组中 为了去重使用
+  /*
+  *function 判断一个数字是否存在数组中
+  *@param nums 需要判断的数组
+  *@param num 需要判断的数字
+  *return boolean true/false 是否存在数组中
+  */
   base.num_exist = function(nums,num) {
     if(nums.indexOf(num) != -1) {
       return true;
